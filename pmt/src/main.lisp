@@ -115,15 +115,18 @@ to functions"
 (defun run-algorithm-for-file (file-path)
   (let* ((patterns (get-patterns))
 	 (algorithms (get-pattern-to-implementation-hash-table patterns))
-	 (occlists nil))
+	 (occlists nil)
+	 (pattern-to-count (make-hash-table :test 'equal)))
+    (dolist (pattern patterns) (setf (gethash pattern pattern-to-count) 0))
     (with-open-file (in file-path)
       (do ((l (read-line in nil) (read-line in nil))) ((null l))
-	(do ((pattern patterns (cdr pattern)))
-	    ((null pattern))
+	(dolist (pattern patterns)
 	  (push
-	   (funcall (gethash (car pattern) algorithms)
-		    l (car pattern))
-	   occlists))
+	   (funcall (gethash pattern algorithms)
+		    l pattern)
+	   occlists)
+	(when *count-only*
+	  (incf (gethash pattern pattern-to-count) (length (car occlists)))))
 	(unless (or *count-only* (last-nil occlists (length patterns)))
 	  (format
 	   t
@@ -133,7 +136,7 @@ to functions"
       (when *count-only*
 	(maphash
 	 #'(lambda (key value) (format t "~a: ~a~%" key value))
-	 (get-occurrence-count-for-pattern patterns occlists))))))
+	 pattern-to-count)))))
 
 (defun last-nil (list &optional (quantity 1))
   "Whether last quantity elements of list are nil"
@@ -179,7 +182,7 @@ to functions"
 	#'(lambda (text pattern)
 	    (sellers text pattern *edit-distance*))))
       ((is-among *algorithm-name* "ukkonen")
-       (set-hash-table-entries-for-pattern-ukkonen
+       (set-hash-table-entries-for-patterns-ukkonen
 	pattern-to-algorithm
 	patterns)))))
 
@@ -203,9 +206,9 @@ used for brevity"
     (setf (gethash key hash-table) value))) 
 
 (defun set-hash-table-entries-for-patterns-ukkonen (hash-table patterns)
-  (dolist (pattern patterns)
+  (dolist (pattern patterns hash-table)
     (setf (gethash pattern hash-table)
-	  (let ((scanner (ukkonnen-scanner pattern *edit-distance*)))
+	  (let ((scanner (ukkonen-scanner pattern *edit-distance*)))
 	    #'(lambda (text pattern) (funcall scanner text))))))
 
 (defun get-occurrence-count-for-pattern (patterns occlists)
