@@ -1,3 +1,5 @@
+(declaim (optimize (speed 3) (debug 0) (safety 0) (space 0)))
+
 (require 'bruteforce (or (probe-file "bruteforce.fasl") (probe-file "bruteforce.lisp")))
 (require 'kmp (or (probe-file "kmp.fasl") (probe-file "kmp.lisp")))
 (require 'boyer-moore (or (probe-file "bm.fasl") (probe-file "bm.lisp")))
@@ -122,7 +124,7 @@ to functions"
 	   (funcall (gethash (car pattern) algorithms)
 		    l (car pattern))
 	   occlists))
-	(unless *count-only*
+	(unless (or *count-only* (last-nil occlists (length patterns)))
 	  (format
 	   t
 	   "~{~{~a: ~a~^~%~}~%~}~a~%~%"
@@ -132,6 +134,15 @@ to functions"
 	(maphash
 	 #'(lambda (key value) (format t "~a: ~a~%" key value))
 	 (get-occurrence-count-for-pattern patterns occlists))))))
+
+(defun last-nil (list &optional (quantity 1))
+  "Whether last quantity elements of list are nil"
+  (let ((counter quantity))
+    (dolist (value list)
+      (when (not (plusp counter))
+	(return t))
+      (when value (return nil))
+      (decf counter))))
 
 (defun get-patterns ()
   (if (null *pattern-file*) (list (elt *posix-argv* *positional-arguments-start*))
