@@ -1,9 +1,13 @@
 (defun phi (a b) (if (eq a b) 0 1))
 
 (defun compare-chars-by-position (first second position)
+  (declare (optimize (speed 3) (safety 0) (space 0) (debug 0)))
+  (declare (type string first second)
+	   (type integer position))
   (eq (aref first position) (aref second position)))
 
 (defun get-mismatch-position (first second &key (backwards nil))
+  (declare (optimize (speed 3) (space 0) (safety 0) (debug 0)))
   "Get index of mismatch position between two equally long strings,
 returns -1 if not found"
   (let* ((len (length first))
@@ -19,11 +23,15 @@ returns -1 if not found"
 		        #'(lambda (i)
 			    (or (>= i len)
 			     (funcall exit-cond i))))))
+    (declare (type integer len)
+	     (type integer initial-value))
     (do ((i initial-value (funcall step-func i)))
 	((funcall test-func i)
 	 (if (= i len) -1 i))))) ;(= i len) -> no mismatch, return -1
 
 (defun string-equals (first second)
+  (declare (optimize (speed 3) (safety 0) (space 0) (debug 0))
+	   (type string first second))
   "Determines if two strings are equal"
   (= (get-mismatch-position first second) -1))
 
@@ -36,6 +44,8 @@ a string"
       contents)))
 
 (defun vector-range (&key (start 0) (end 0) (step 1))
+  (declare (optimize (speed 3) (safety 0) (space 0) (debug 0))
+	   (type integer start end step))
   "\
 Returns vector with elements from start (inclusive) incremented
 by step to end (exclusive)"
@@ -50,6 +60,7 @@ by step to end (exclusive)"
        (backwards nil)
        (increment-function
 	#'(lambda (&rest r) (declare (ignore r)) 1)))
+  (declare (optimize (speed 3) (safety 0) (space 0) (debug 0)))
   "\
 Loops over text attempting to match pattern against it,
 returning occurrences's indices, increment-function is used to
@@ -61,7 +72,8 @@ brute-force approach"
 	(lt (length text))
 	(lp (length pattern))
 	(lendiff (- lt lp)))
-    (declare (type integer lt lp))
+    (declare (type integer lt lp lendiff)
+	     (type list occ))
     (do ((i 0))
 	 ((> i lendiff) (nreverse occ))
       (let* ((slice (subseq text i (+ i lp)))
@@ -69,8 +81,8 @@ brute-force approach"
 	      (get-mismatch-position
 	       slice pattern
 	       :backwards backwards))) ;mp: mismatch position
-	(declare (type string slice))
-	(declare (type integer mp))
+	(declare (type string slice)
+		 (type integer mp))
 	(when (= -1 mp) (push i occ))
 	(incf i (funcall increment-function mp i))))))
 

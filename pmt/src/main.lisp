@@ -96,7 +96,9 @@ to functions"
   (print *help-string*))
 
 (defun run-algorithm-for-files ()
+  (declare (optimize (speed 3) (space 0) (safety 0) (debug 0)))
   (let ((file-paths (get-file-paths)))
+    (declare (type list file-paths))
     (do ((cur-file-path file-paths (cdr cur-file-path)))
 	((null cur-file-path))
       (run-algorithm-for-file (car cur-file-path)))))
