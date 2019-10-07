@@ -3,15 +3,19 @@
 (require 'goodsuffix (or (probe-file "goodsuffix.fasl") (probe-file "goodsuffix.lisp")))
 
 (defun badchar-increment (text pattern)
+  (declare (type string text pattern))
   (let ((badacc (get-badchar-hashfunc pattern)))
     (lambda (mp i)
+      (declare (type integer mp i))
       (let ((char-pos
 	     (funcall badacc (aref text (max 0 (+ mp i))))))
 	(max 1 (- mp char-pos))))))
 
 (defun goodsuffix-increment (pattern)
+  (declare (type string pattern))
   (let ((gs (get-goodsuffix-table pattern)))
     (lambda (mp &rest r)
+      (declare (type integer mp))
       (declare (ignore r))
       (aref gs
 	    (if (= -1 mp)
@@ -19,6 +23,7 @@
 		mp)))))
   
 (defun boyer-moore-increment (text pattern)
+  (declare (type string text pattern))
   (let ((bi (badchar-increment text pattern))
 	(gi (goodsuffix-increment pattern)))
     (lambda (&rest r)
@@ -27,6 +32,7 @@
        (apply gi r)))))
 
 (defun boyer-moore (text pattern)
+  (declare (type string text pattern))
   (get-occurrences
    text pattern
    :backwards t

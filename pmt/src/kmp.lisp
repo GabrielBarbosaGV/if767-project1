@@ -2,7 +2,9 @@
 (require 'borders (or (probe-file "borders.fasl") (probe-file "borders.lisp")))
 
 (defun kmp-increment (pattern)
+  (declare (type string pattern))
   (let ((borders (get-borders pattern)))
+    (declare (type (vector integer) borders))
     (lambda (mp &rest r) ;mp: Mismatch position
       (declare (ignore r))
       (1+ (aref borders (max mp 0))))))

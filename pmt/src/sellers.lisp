@@ -1,6 +1,8 @@
 (require 'util (or (probe-file #p"util.fasl") (probe-file #p"util.lisp")))
 
 (defun sellers (text pattern error-size)
+  (declare (type string text pattern))
+  (declare (type integer error-size))
   (let* ((n (length text))
 	 (m (length pattern))
 	 (occ nil)
@@ -9,6 +11,7 @@
 	     (make-array (1+ m) :initial-element 0)))
 	 (cur (cdr d))
 	 (prev (car d)))
+    (declare (type integer n m))
     (when (<= (aref prev m) error-size)
       (push 0 occ))
     (do ((j 1 (1+ j))) ((> j n) (nreverse occ))
@@ -21,6 +24,7 @@
 	       (1+ (aref prev i)))
 	      (up
 	       (1+ (aref cur (1- i)))))
+	  (declare (type integer diag left up))
 	  (setf (aref cur i) (min diag left up))))
       (when (<= (aref cur m) error-size)
 	(push (1- j) occ))

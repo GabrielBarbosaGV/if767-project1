@@ -56,10 +56,12 @@ returning occurrences's indices, increment-function is used to
 increment search index. If not provided, defaults to
 incrementing by one, in equivalence to the
 brute-force approach"
+  (declare (type string text pattern))
   (let* ((occ nil) ;occ: occurrences
 	(lt (length text))
 	(lp (length pattern))
 	(lendiff (- lt lp)))
+    (declare (type integer lt lp))
     (do ((i 0))
 	 ((> i lendiff) (nreverse occ))
       (let* ((slice (subseq text i (+ i lp)))
@@ -67,6 +69,8 @@ brute-force approach"
 	      (get-mismatch-position
 	       slice pattern
 	       :backwards backwards))) ;mp: mismatch position
+	(declare (type string slice))
+	(declare (type integer mp))
 	(when (= -1 mp) (push i occ))
 	(incf i (funcall increment-function mp i))))))
 

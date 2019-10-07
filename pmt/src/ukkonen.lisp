@@ -6,6 +6,9 @@
 		    column
 		    error-size
 		    character)
+  (declare (type string pattern))
+  (declare (type integer error-size))
+  (declare (type character character))
   (let* ((m (length pattern))
 	 (new-column (make-array (1+ m) :initial-element 0)))
     (do ((i 1 (1+ i))) ((> i m) new-column)
@@ -23,6 +26,8 @@
 (defun make-finite-state-machine (pattern
 				  error-size
 				  alphabet)
+  (declare (type string pattern))
+  (declare (type integer error-size))
   (let* ((m (length pattern))
 	 (states (make-hash-table :test 'equalp))
 	 (delta (make-hash-table :test 'equal))
@@ -30,6 +35,7 @@
 	 (final (make-instance 'hash-set))
 	 (q-zero (make-array (1+ m)))
 	 (state-count 1))
+    (declare (type integer m state-count))
     (do ((i 0 (1+ i))) ((> i m))
       (setf (aref q-zero i) (min i (1+ error-size))))
     (setf (gethash q-zero states) 0)
@@ -56,9 +62,11 @@
 		  i-next)))))))
 
 (defun scan (delta-final text)
+  (declare (type string text))
   (let ((cur 0)
 	(n (length text))
 	(occ nil))
+    (declare (type integer cur n))
     (destructuring-bind (delta . final) delta-final
       (when (hash-set-in final cur)
 	(push 0 occ))
@@ -68,7 +76,9 @@
 	  (push j occ))))))
 
 (defun ukkonen-scanner (pattern error-size)
-  (let ((alphabet (make-array 200 :element-type 'character)))
+  (declare (type string pattern))
+  (declare (type integer error-size))
+  (let ((alphabet (make-array 2000 :element-type 'character)))
     (do ((i 0 (1+ i))) ((>= i 200))
       (setf (aref alphabet i) (code-char i)))
     (let ((finite-state-machine

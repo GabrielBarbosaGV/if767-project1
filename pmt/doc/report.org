@@ -1,0 +1,9 @@
+* Tempo de execução
+Tempo de execução para cada algoritmo com o padrão /int/ para arquivo /sources.200MB/
+
+| Algoritmo          | Tempo de execução (s) | Número de ocorrências contado |
+| grep               |                 0.322 |                        475504 |
+| Knuth-Morris-Pratt |                18.549 |                        538330 |
+| Boyer-Moore        |                30.276 |                        538330 |
+| Sellers (erro 0)   |                31.098 |                        538330 |
+| Ukkonen (erro 0)   |                19.376 |                        538329 |
