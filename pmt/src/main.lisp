@@ -1,5 +1,3 @@
-(declaim (optimize (speed 3) (debug 0) (safety 0) (space 0)))
-
 (require 'bruteforce (or (probe-file "bruteforce.fasl") (probe-file "bruteforce.lisp")))
 (require 'kmp (or (probe-file "kmp.fasl") (probe-file "kmp.lisp")))
 (require 'boyer-moore (or (probe-file "bm.fasl") (probe-file "bm.lisp")))
@@ -113,10 +111,16 @@ to functions"
       (push (car c) files))))
 
 (defun run-algorithm-for-file (file-path)
+  (declare (optimize (speed 3) (space 0) (safety 0) (debug 0))
+	   (type string file-path))
   (let* ((patterns (get-patterns))
 	 (algorithms (get-pattern-to-implementation-hash-table patterns))
 	 (occlists nil)
 	 (pattern-to-count (make-hash-table :test 'equal)))
+    (declare (type list occlists)
+	     (type list patterns)
+	     (type hash-table algorithms)
+	     (type hash-table pattern-to-count))
     (dolist (pattern patterns) (setf (gethash pattern pattern-to-count) 0))
     (with-open-file (in file-path :external-format :latin1)
       (do ((l (read-line in nil) (read-line in nil))) ((null l))
