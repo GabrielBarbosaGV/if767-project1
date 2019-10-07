@@ -25,7 +25,7 @@
 		mp)))))
   
 (defun boyer-moore-increment (text pattern)
-  (declare (optimize (speed 3) (safety 0) (speed 0) (debug 0))
+  (declare (optimize (speed 3) (safety 0) (space 0) (debug 0))
 	   (type string text pattern))
   (let ((bi (badchar-increment text pattern))
 	(gi (goodsuffix-increment pattern)))

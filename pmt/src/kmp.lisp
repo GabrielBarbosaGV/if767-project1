@@ -11,7 +11,7 @@
       (1+ (aref borders (max mp 0))))))
 
 (defun knuth-morris-pratt (text pattern)
-  (declare (type text pattern))
+  (declare (type string text pattern))
   (get-occurrences
    text pattern
    :increment-function (kmp-increment pattern)))

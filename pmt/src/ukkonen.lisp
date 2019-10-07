@@ -6,9 +6,10 @@
 		    column
 		    error-size
 		    character)
-  (declare (type string pattern))
-  (declare (type integer error-size))
-  (declare (type character character))
+  (declare (optimize (speed 3) (safety 0) (space 0) (debug 0))
+	   (type string pattern)
+	   (type integer error-size)
+	   (type character character))
   (let* ((m (length pattern))
 	 (new-column (make-array (1+ m) :initial-element 0)))
     (do ((i 1 (1+ i))) ((> i m) new-column)
@@ -26,8 +27,9 @@
 (defun make-finite-state-machine (pattern
 				  error-size
 				  alphabet)
-  (declare (type string pattern))
-  (declare (type integer error-size))
+  (declare (optimize (speed 3) (space 0) (safety 0) (debug 0))
+	   (type string pattern)
+	   (type integer error-size))
   (let* ((m (length pattern))
 	 (states (make-hash-table :test 'equalp))
 	 (delta (make-hash-table :test 'equal))
@@ -62,7 +64,8 @@
 		  i-next)))))))
 
 (defun scan (delta-final text)
-  (declare (type string text))
+  (declare (optimize (speed 3) (space 0) (safety 0) (debug 0))
+	   (type string text))
   (let ((cur 0)
 	(n (length text))
 	(occ nil))
