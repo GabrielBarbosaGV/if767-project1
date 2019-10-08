@@ -1,9 +1,74 @@
-* Tempo de execução
-Tempo de execução para cada algoritmo com o padrão /int/ para arquivo /sources.200MB/
+#+OPTIONS: toc:nil title:nil
+\begin{titlepage}
+    \begin{center}
+        \vspace{1cm}
 
-| Algoritmo          | Tempo de execução (s) | Número de ocorrências contado |
-| grep               |                 0.322 |                        475504 |
-| Knuth-Morris-Pratt |                18.549 |                        538330 |
-| Boyer-Moore        |                30.276 |                        538330 |
-| Sellers (erro 0)   |                31.098 |                        538330 |
-| Ukkonen (erro 0)   |                19.376 |                        538329 |
+	\textbf{Implementação de Algoritmos de Casamento de Padrão}
+
+	\vspace {2cm}
+	Gabriel Barbosa Gaspar Veloso
+
+	\vfill
+
+	CIn - UFPE Av. Jorn. Aníbal Fernandes, s/n - Cidade Universitária,
+	Recife - PE, 50740-560
+    \end{center}
+\end{tilepage}
+\pagebreak
+
+#+TOC: headlines 2
+
+\pagebreak
+
+* Equipe
+Projeto feito por Gabriel Barbosa Gaspar Veloso.
+
+* Implementação
+** Algoritmos
+Foram implementados os algoritmos de */Knuth-Morris-pratt/*,
+*/Boyer-Moore/*, */Sellers/* e */Ukkonen/*. Quando não
+explicitamente escolhidos, são usados os algoritmos
+*/Boyer-Moore/* para o caso de não ter sido escolhida
+distância de edição, e */Ukkonen/*, caso contrário.
+
+Quando um algoritmo que suporta distância de edição é escolhido,
+mas com distância não especificada, essa é considerada como
+zero.
+
+** Detalhes de implementação
+	LISP foi inicialmente concebida com o propósito de processar
+listas encadeadas, e daí vem seu nome (/List Processing/). Porém, muito
+tempo se passou desde a implementação inicial de LISP, e hoje seu
+dialeto mais comum, Common Lisp, utilizado nesse projeto, oferece
+/arrays/ e /hash-tables/. Infelizmente, a presença dessas estruturas
+não foi suficiente para gerar performance desejável para situações
+em que algoritmos de casamento de padrão são usados. Creio que o
+estilo de funções como /first-class citizens/ e tipos dinâmicos
+tenha sido o principal fator para tornar os algoritmos implementados
+cerca de dez vezes mais lentos que /grep/.
+
+	Fato relevante também é que as linhas dos arquivos de /input/
+eram lidas e então postas em /strings/, para só então ser realizado o
+casamento de padrões. Esse é um exemplo de detalhe de implementação
+potencialmente corrigível com mais atenção a detalhes durante a
+produção. Com esforço suficiente, creio ser possível tornar o programa
+gerado tão veloz quanto /grep/, já que compiladores de LISP são muito
+bons em gerar código de máquina. Há um artigo \footnote{VERNA, Didier.
+How to Make Lisp Go Faster than C.
+IAENG International Journal of Computer Science,
+v. 32, n. 4, p. 499-504, 2006.}
+que através de sucessivas anotações e correções a código LISP simples,
+consegue atingir performance igual ou superior a um programa escrito
+em C.
+
+* Tempo de execução
+Tempo de execução médio (100 execuções) para cada algoritmo
+com o padrão /int/ para arquivo /sources.200MB/:
+
+#+ATTR_LATEX: :caption \\\parbox{\footnotesize Testes realizados utilizando a ferramenta perf stat.}
+| Algoritmo          | Tempo de execução (s) |
+|--------------------+-----------------------|
+| grep               | 3.0717 +- 0.0214      |
+| Knuth-Morris-Pratt | 27.962 +- 0.130       |
+| Boyer-Moore        |                       |
+|                    |                       |
