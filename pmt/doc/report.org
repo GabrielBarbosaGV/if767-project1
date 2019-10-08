@@ -53,15 +53,29 @@ casamento de padrões. Esse é um exemplo de detalhe de implementação
 potencialmente corrigível com mais atenção a detalhes durante a
 produção. Com esforço suficiente, creio ser possível tornar o programa
 gerado tão veloz quanto /grep/, já que compiladores de LISP são muito
-bons em gerar código de máquina. Há um artigo \footnote{VERNA, Didier.
-How to Make Lisp Go Faster than C.
-IAENG International Journal of Computer Science,
-v. 32, n. 4, p. 499-504, 2006.}
-que através de sucessivas anotações e correções a código LISP simples,
-consegue atingir performance igual ou superior a um programa escrito
+bons em gerar código de máquina. Há um artigo
+\footnote{VERNA, Didier. How to Make Lisp Go Faster than C. IAENG International Journal of Computer Science, v. 32, n. 4, p. 499-504, 2006.}
+em que, através de sucessivas anotações e correções a código LISP simples,
+atinge-se performance igual ou superior a um programa escrito
 em C.
 
-* Tempo de execução
+** Bugs
+Com o /macro with-open-file/ é possível ler um arquivo e garantir que será
+fechado em caso de erros. Esse /macro/ detecta o /encoding/ do arquivo a 
+ser lido para evitar erros de leitura. O arquivo /sources.200MB/
+disponibilizado no site de /Pizza & Chili/ mostra ter codificação *UTF-8*
+quando verificado com o comando /file/ e, portanto, é lido como *UTF-8* pelo
+programa. Acontece que, em dado caractere, o programa não consegue realizar
+a decodificação utilizando *UTF-8*, mas consegue com *Latin-1*. Dessa forma,
+para realizar os testes do programa, tive de explicitamente compilá-lo com
+a opção :external-format :latin1 no /macro with-open-file/. Esse problema
+não ocorreu em outras situações, de forma que o código enviado não terá
+a mesma opção informada.
+
+\pagebreak
+
+* Testes
+** Tempo de execução
 Tempo de execução médio (100 execuções) para cada algoritmo
 com o padrão /int/ para arquivo /sources.200MB/:
 
@@ -72,3 +86,10 @@ com o padrão /int/ para arquivo /sources.200MB/:
 | Knuth-Morris-Pratt | 27.962 +- 0.130       |
 | Boyer-Moore        | 41.767 +- 0.130       |
 |                    |                       |
+
+** Conclusões
+Infelizmente, o tempo resultante está longe do desejado. Uso do
+programa é recomendável somente para arquivos pequenos, caso em 
+que funciona sem problemas. Tenho interesse, ainda assim, de 
+tentar modificar o código através de um tempo mais extenso, para
+atingir resultados melhores.
