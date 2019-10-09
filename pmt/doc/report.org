@@ -83,9 +83,9 @@ com o padrão /int/ para arquivo /sources.200MB/:
 | Algoritmo          | Tempo de execução (s) |
 |--------------------+-----------------------|
 | grep               | 3.0717 +- 0.0214      |
-| Knuth-Morris-Pratt | 27.962 +- 0.130       |
-| Boyer-Moore        | 41.767 +- 0.130       |
-|                    |                       |
+| Knuth-Morris-Pratt | 27.962 +- 0.1300      |
+| Boyer-Moore        | 41.767 +- 0.1300      |
+| Sellers            | 41.641 +- 0.4500      |
 
 ** Conclusões
 Infelizmente, o tempo resultante está longe do desejado. Uso do
