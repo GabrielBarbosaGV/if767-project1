@@ -88,6 +88,8 @@ com o padrão /int/ para arquivo /sources.200MB/:
 | Sellers            | 41.641 +- 0.4500      |
 | Ukkonen            | 28.847 +- 0.2550      |
 
+\includegraphics{tempos}
+
 ** Conclusões
 Infelizmente, o tempo resultante está longe do desejado. Uso do
 programa é recomendável somente para arquivos pequenos, caso em 

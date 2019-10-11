@@ -1,0 +1,11 @@
+#+PLOT: ind:1 with:"boxes lc 'blue'"
+#+PLOT: set:"style fill solid 1.00 border 0"
+#+PLOT: set:"boxwidth 0.4"
+#+PLOT: set:"grid ytics lc rgb '#000000'"
+| Algoritmo          | Tempo de execução (s) |
+|--------------------+-----------------------|
+| grep               |                3.0717 |
+| Knuth-Morris-Pratt |                27.962 |
+| Ukkonen            |                28.847 |
+| Sellers            |                41.641 |
+| Boyer-Moore        |                41.767 |
