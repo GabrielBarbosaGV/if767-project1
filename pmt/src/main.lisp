@@ -124,7 +124,7 @@ to functions"
 	     (type hash-table algorithms)
 	     (type hash-table pattern-to-count))
     (dolist (pattern patterns) (setf (gethash pattern pattern-to-count) 0))
-    (with-open-file (in file-path :external-format :latin1)
+    (with-open-file (in file-path)
       (do ((l (read-line in nil) (read-line in nil))) ((null l))
 	(dolist (pattern patterns)
 	  (push
